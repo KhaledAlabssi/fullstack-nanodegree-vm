@@ -8,14 +8,11 @@ from sqlalchemy.orm import relationship, backref
 Base = declarative_base()
 
 
-
-
 # user class as User should contain
-#id, name, email and picture
+# id, name, email and picture
 class User(Base):
     __tablename__ = 'user'
-
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable = False)
     email = Column(String(250), nullable = False)
     picture = Column(String(250))
@@ -75,5 +72,5 @@ class Items(Base):
 
 
 #creating the Database
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('sqlite:///item_catalog.db')
 Base.metadat.create_all(engine)
