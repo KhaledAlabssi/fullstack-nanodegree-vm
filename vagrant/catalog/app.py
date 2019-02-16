@@ -23,7 +23,9 @@ app = Flask(__name__)
 
 #gconnect CLIENT_ID
 
-
+CLIENT_ID = json.loads(
+    open('client_secrets.json', 'r').read())['web']['client_id']
+    APPLICATION_NAME = 'item-catalog'
 
 
 
@@ -41,20 +43,49 @@ session = DBSession()
 
 
 
+
+
+
 #login method
 @app.route('/login')
+def showLogin():
+    state = ''.join(
+        random.choice(string.ascij_uppercase + string.digits)
+        for x in range(32))
+    login_session['state'] = state
+    return 'Session state is %s' % login_session['state']
+    #later would be rendered to login.html
+
+
+
+#user methods (helper functions)
+def createUser(login_session):
+    newUser = User(
+        name=login_session['username'],
+        email=login_session['email'],
+        picture=login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
 
 
 
 #gconnect
 @app.route('/gconnect', methods=['POST'])
-
-
-
-
-#helper method
-
-
 
 
 #gdisconect
