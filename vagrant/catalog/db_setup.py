@@ -1,7 +1,7 @@
 #  from and import section
 from sqlalchemy import Column, Integer, String
-from sqlalchemy import foreignkey, DateTime, create_engine
-from sqlalchemy.ext.declararive import declarative_base
+from sqlalchemy import ForeignKey, DateTime, create_engine
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 
 
@@ -42,7 +42,7 @@ class Category(Base):
 
 class Items(Base):
     __tablename__ = 'items'
-    id = Cloumn(Integer, primary_key = True)
+    id = Column(Integer, primary_key = True)
     name = Column(String(250), nullable = False)
     date = Column(DateTime, nullable = False)
     description = Column(String(250))
@@ -73,4 +73,4 @@ class Items(Base):
 
 #creating the Database
 engine = create_engine('sqlite:///item_catalog.db')
-Base.metadat.create_all(engine)
+Base.metadata.create_all(engine)
