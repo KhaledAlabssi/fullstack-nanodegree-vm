@@ -22,7 +22,6 @@ app = Flask(__name__)
 
 
 #gconnect CLIENT_ID
-
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
     APPLICATION_NAME = 'Item Catalog'
@@ -209,6 +208,10 @@ def gdisconnect():
 #homepage
 @app.route('/')
 @app.route('/catalog')
+def showCatalog():
+    categories = session.query(Category).order_by(asc(Category.name))
+    items = session.query(Items).order_by(desc(Items.date)).limit(3)
+    return render_template('catalog.html', categories=categories, items = items)
 
 
 
