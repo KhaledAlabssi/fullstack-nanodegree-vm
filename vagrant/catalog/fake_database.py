@@ -4,14 +4,14 @@ from db_setup import *
 import datetime
 
 
-engine = create_engine('sqlite:///catalog.db')
- Base.metadata = engine
- DBSession = sessionmaker(bind=engine)
- session = DBSession()
- #delete all table and create new
- session.query(User).delete()
- session.query(Category).delete()
- session.query(Items).delete()
+engine = create_engine('sqlite:///item_catalog.db')
+Base.metadata = engine
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+#delete all table and create new
+session.query(User).delete()
+session.query(Category).delete()
+session.query(Items).delete()
 
 #fake user, category and item
 User1 = User(name='Nini Keck', email='nini@hello.com',
