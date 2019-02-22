@@ -4,12 +4,13 @@ Been working on a prototype for the project.
 Imports, routes and the gerneral form of the database and app file were done.
 
 
-About this Commit:
+
 client_secrets: This commit contain the alot of work, The Google json file (client_secrets.json)
 gconnect: Also I finished with the gconnect method but still need to be tested soon after I finish with login.html and catalog.html
 gdisconnect: finish with it and need to be tested as soon as i'm done with html files and gconnect and item_catalog.db tests, May be I will redirected it later to homepage when it possible.
 
-
+About this Commit:
+Now it's getting complicated, I will get back to work on the categories first and then I will get back to the login part.
 
 
 
