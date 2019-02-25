@@ -27,9 +27,6 @@ import json
 from flask import make_response
 import requests
 
-
-
-
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
@@ -47,7 +44,8 @@ session = DBSession()
 @app.route('/login')
 def showLogin():
     state = ''.join(
-        random.choice(string.ascii_uppercase + string.digits) for x in range(32))
+        random.choice(string.ascii_uppercase + string.digits)
+        for x in range(32))
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
     return render_template('login.html', STATE=state)
@@ -110,8 +108,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(
+            json.dumps('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -142,13 +140,13 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '  
     flash("you are now logged in as %s" % login_session['username'])
     print 'Gconnect: Done.'
     return output
 
-# User Helper Functions
 
+# User Helper Functions
 def createUser(login_session):
     newUser = User(name=login_session['username'], email=login_session[
                    'email'], picture=login_session['picture'])
@@ -171,14 +169,14 @@ def getUserID(email):
         return None
 
 
-
 # DISCONNECT - Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
         print 'Access Token is None'
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        response = make_response(
+            json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     print 'In gdisconnect access token is %s', access_token
@@ -199,24 +197,26 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(
+            json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
 
-#homepage
+# homepage
 @app.route('/')
 @app.route('/catalog')
 def showCatalog():
     companies = session.query(Company).order_by(asc(Company.name))
     autos = session.query(Cars).order_by(asc(Cars.name))
-    return render_template('catalog.html',
-                            companies = companies,
-                            autos = autos)
+    return render_template(
+        'catalog.html',
+        companies=companies,
+        autos=autos)
 
 
 # Create a new brand/company
-@app.route('/company/new/', methods = ['GET','POST'])
+@app.route('/company/new/', methods=['GET', 'POST'])
 def newCompany():
     if 'username' not in login_session:
         return redirect('/login')
@@ -231,9 +231,10 @@ def newCompany():
         return render_template('newCompany.html')
 
 
-
 # Edit a bran/company
-@app.route('/company/<int:company_id>/edit/' , methods = ['GET','POST'])
+@app.route(
+    '/company/<int:company_id>/edit/',
+    methods=['GET', 'POST'])
 def editCompanies(company_id):
     editCompany = session.query(Company).filter_by(id=company_id).one()
     if 'username' not in login_session:
@@ -248,15 +249,16 @@ def editCompanies(company_id):
             editCompany.name = request.form['name']
         session.add(editCompany)
         session.commit()
-        flash("%s has been edited"% editCompany.name)
+        flash("%s has been edited" % editCompany.name)
         return redirect(url_for('showCatalog'))
     else:
-        return render_template('editCompany.html',
-            company_id = company_id,editCompany = editCompany)
+        return render_template(
+            'editCompany.html',
+            company_id=company_id, editCompany=editCompany)
 
 
 # delete a brand/company
-@app.route('/company/<int:company_id>/delete/', methods = ['GET','POST'])
+@app.route('/company/<int:company_id>/delete/', methods=['GET', 'POST'])
 def deleteCompanies(company_id):
     deleteCompany = session.query(Company).filter_by(id=company_id).one()
     if 'username' not in login_session:
@@ -264,12 +266,12 @@ def deleteCompanies(company_id):
     if deleteCompany.user_id != login_session['user_id']:
         return "<script>function myFunction() " \
                "{alert('You are not authorized to delete this company." \
-               "Please create your own company in order to delete.');}</script>" \
+               "Create your company in order to delete.');}</script>" \
                "<body onload='myFunction()''>"
     if request.method == 'POST':
         session.delete(deleteCompany)
         session.commit()
-        flash("%s has been deleted"% deleteCompany.name)
+        flash("%s has been deleted" % deleteCompany.name)
         return redirect(url_for('showCatalog'))
     else:
         return render_template('deleteCompany.html', company=deleteCompany)
@@ -279,43 +281,47 @@ def deleteCompanies(company_id):
 @app.route('/company/<int:company_id>/')
 @app.route('/company/<int:company_id>/autos/')
 def showAutos(company_id):
-    company = session.query(Company).filter_by(id = company_id).one()
+    company = session.query(Company).filter_by(id=company_id).one()
     creator = getUserInfo(company.user_id)
-    autos = session.query(Cars).filter_by(company_id = company_id).all()
-    if 'username' not in login_session or creator.id != login_session['user_id']:
+    autos = session.query(Cars).filter_by(company_id=company_id).all()
+    l_g = login_session
+    if 'username' not in l_g or creator.id != l_g['user_id']:
         return render_template('publicAutos.html',
-                               company=company ,
-                               company_id=company_id ,
+                               company=company,
+                               company_id=company_id,
                                autos=autos)
     else:
-        return render_template("Autos.html",
-                                company = company,
-                                company_id = company_id ,
-                                autos=autos)
+        return render_template(
+            "Autos.html",
+            company=company,
+            company_id=company_id,
+            autos=autos)
 
 
 # Create Auto
-@app.route('/company/<int:company_id>/autos/new', methods = ['GET','POST'])
+@app.route('/company/<int:company_id>/autos/new', methods=['GET', 'POST'])
 def newAuto(company_id):
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newCar = Cars(name = request.form['name'],
-                           Specifications = request.form['Specifications'],
-                           price = request.form['price'],
-                           company_id = company_id)
+        newCar = Cars(
+            name=request.form['name'],
+            Specifications=request.form['Specifications'],
+            price=request.form['price'],
+            company_id=company_id)
         session.add(newCar)
         session.commit()
         flash('New Car Created!')
         return redirect(url_for('showAutos', company_id=company_id))
     else:
-        return render_template('newAuto.html',company_id = company_id)
-
+        return render_template('newAuto.html', company_id=company_id)
 
 
 # Edit auto
-@app.route('/company/<int:company_id>/autos/<int:car_id>/edit', methods=['GET','POST'])
-def editAuto(company_id , car_id):
+@app.route(
+    '/company/<int:company_id>/autos/<int:car_id>/edit',
+    methods=['GET', 'POST'])
+def editAuto(company_id, car_id):
     if 'username' not in login_session:
         return redirect('/login')
     editCar = session.query(Cars).filter_by(id=car_id).one()
@@ -332,17 +338,20 @@ def editAuto(company_id , car_id):
             editCar.price = request.form['price']
         session.add(editCar)
         session.commit()
-        flash("%s has been edited"% editCar.name)
-        return redirect(url_for('showAutos', company_id=company_id ))
+        flash("%s has been edited" % editCar.name)
+        return redirect(url_for('showAutos', company_id=company_id))
     else:
-        return render_template('editAuto.html',
-                                company_id=company_id,
-                                car_id= car_id,
-                                editCar=editCar)
+        return render_template(
+            'editAuto.html',
+            company_id=company_id,
+            car_id=car_id,
+            editCar=editCar)
 
 
 # Delete auyo
-@app.route('/company/<int:company_id>/autos/<int:car_id>/delete', methods=['GET','POST'])
+@app.route(
+    '/company/<int:company_id>/autos/<int:car_id>/delete',
+    methods=['GET', 'POST'])
 def deleteAuto(company_id, car_id):
     if 'username' not in login_session:
         return redirect('/login')
@@ -350,17 +359,16 @@ def deleteAuto(company_id, car_id):
     company = session.query(Company).filter_by(id=company_id).one()
     if login_session['user_id'] != company.user_id:
         return "<script>function myFunction()" \
-               " {alert('You are not authorized to delete auto to this company." \
-               " Please create your own company in order to delete autos.');}" \
-               "</script><body onload='myFunction()''>"
+            " {alert('You are not authorized to delete auto to this company." \
+            " Please create your own company in order to delete autos.');}" \
+            "</script><body onload='myFunction()''>"
     if request.method == 'POST':
         session.delete(deleteCar)
         session.commit()
-        flash("%s has been Deleted"% deleteCar.name)
+        flash("%s has been Deleted" % deleteCar.name)
         return redirect(url_for('showAutos', company_id=company_id))
     else:
-        return render_template('deleteAuto.html',car=deleteCar)
-
+        return render_template('deleteAuto.html', car=deleteCar)
 
 
 # JSON APIs
@@ -369,10 +377,12 @@ def companiesJSON():
     company = session.query(Company).all()
     return jsonify(Company=[i.serialize for i in company])
 
+
 @app.route('/company/<int:company_id>/autoss/<int:car_id>/JSON')
 def autoJSON(company_id, car_id):
     car = session.query(Cars).filter_by(id=car_id).one()
     return jsonify(Cars=car.serialize)
+
 
 @app.route('/company/<int:company_id>/autos/JSON')
 def autosJSON(company_id):
@@ -380,10 +390,6 @@ def autosJSON(company_id):
     auto = session.query(Cars).filter_by(
         company_id=company_id).all()
     return jsonify(Cars=[i.serialize for i in auto])
-
-
-
-
 
 
 if __name__ == '__main__':
