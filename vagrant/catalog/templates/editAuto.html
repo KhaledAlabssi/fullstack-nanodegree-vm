@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -22,4 +22,29 @@
     <a href= "{{url_for('showAutos', company_id = company_id)}}">Cancel</a>
 
 </body>
-</html>
+</html> -->
+{%extends 'base.html'%}
+{%block title%} Edit Auto {% endblock title%}
+{%block content%}
+<h1>Edit Auto: {{editCar.name}}</h1>
+<form action= "{{ url_for('editAuto' , company_id = company_id , car_id = car_id) }}" method = 'POST'>
+
+<p>Name:</p>
+<input type = 'text' size='50' name = 'name' placeholder="{{editCar.name}}" required>
+
+<p>Specifications:</p>
+<input type = 'text' size='50' name = 'Specifications' placeholder="{{editCar.Specifications}}" required>
+
+<p>Price:</p>
+<input type = 'text' size='50' name = 'price' placeholder="{{editCar.price}}" required>
+<br><br>
+<input class="btn btn-primary" role="button" type='submit' value='Edit'>
+<br>
+</form>
+<br>
+<a  class="btn btn-danger" role="button" href= "{{url_for('showAutos', company_id = company_id)}}">Cancel</a>
+
+
+
+
+{%endblock%}

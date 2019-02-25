@@ -39,7 +39,8 @@
 {%extends 'base.html'%}
 {%block title%} Catalog {% endblock title%}
 {%block content%}
-<h1>Brands:</h1>
+<h1>Create New Brand: <a class="btn btn-primary" role="button" href="{{url_for('newCompany')}}">New Brand</a></h1>
+<h2>Brands:</h2>
 {%for i in companies%}
 <div class ='container'>
     <h3>{{i.name}} Brand.</h3>
