@@ -1,10 +1,11 @@
-#import sys
+# import sys
 from sqlalchemy import Column, Integer, String
 from sqlalchemy import ForeignKey, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
+
 
 class User(Base):
     __tablename__ = 'user'
@@ -53,7 +54,6 @@ class Cars(Base):
             'id': self.id,
             'price': self.price,
         }
-
 
 
 engine = create_engine('sqlite:///cars.db')

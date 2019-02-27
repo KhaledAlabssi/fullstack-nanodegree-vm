@@ -40,6 +40,7 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+
 # Login - Create anti-forgery state token
 @app.route('/login')
 def showLogin():
@@ -49,6 +50,7 @@ def showLogin():
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
     return render_template('login.html', STATE=state)
+
 
 # GConnect
 @app.route('/gconnect', methods=['POST'])
@@ -140,7 +142,12 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '  
+    output += ' " style = "width: 300px;' \
+        'height: 300px;' \
+        'border-radius: 150px;' \
+        '-webkit-border-radius: 150px;' \
+        '-moz-border-radius: 150px;"> '
+
     flash("you are now logged in as %s" % login_session['username'])
     print 'Gconnect: Done.'
     return output
