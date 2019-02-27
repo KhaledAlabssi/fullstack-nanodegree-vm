@@ -30,13 +30,13 @@
 <form action= "{{ url_for('editAuto' , company_id = company_id , car_id = car_id) }}" method = 'POST'>
 
 <p>Name:</p>
-<input type = 'text' size='50' name = 'name' placeholder="{{editCar.name}}" required>
+<input type = 'text' size='50' name = 'name' placeholder="{{editCar.name}}">
 
 <p>Specifications:</p>
-<input type = 'text' size='50' name = 'Specifications' placeholder="{{editCar.Specifications}}" required>
+<input type = 'text' size='50' name = 'Specifications' placeholder="{{editCar.Specifications}}">
 
 <p>Price:</p>
-<input type = 'text' size='50' name = 'price' placeholder="{{editCar.price}}" required>
+<input type = 'text' size='50' name = 'price' placeholder="{{editCar.price}}">
 <br><br>
 <input class="btn btn-primary" role="button" type='submit' value='Edit'>
 <br>
